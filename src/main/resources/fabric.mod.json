@@ -15,9 +15,6 @@
   "icon": "assets/musc/icon.png",
   "environment": "server",
   "entrypoints": {
-    "client": [
-      "javahub.mod.musc.client.MuscClient"
-    ],
     "main": [
       "javahub.mod.musc.Musc"
     ]
