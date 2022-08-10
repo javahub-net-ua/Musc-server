@@ -1,8 +1,8 @@
-package javahub.mod.musc;
+package net.javahub.mod.musc;
 
-import javahub.mod.musc.config.MuscConfig;
-import javahub.mod.musc.config.MuscMusicConfig;
-import javahub.mod.musc.networking.MuscTCPServer;
+import net.javahub.mod.musc.config.MuscConfig;
+import net.javahub.mod.musc.config.MuscMusicConfig;
+import net.javahub.mod.musc.networking.MuscTCPServer;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 

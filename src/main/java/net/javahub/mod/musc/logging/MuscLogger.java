@@ -1,11 +1,11 @@
-package javahub.mod.musc.logging;
+package net.javahub.mod.musc.logging;
 
-import static javahub.mod.musc.Musc.CONFIG;
+import static net.javahub.mod.musc.Musc.CONFIG;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javahub.mod.musc.Musc;
+import net.javahub.mod.musc.Musc;
 
 public class MuscLogger {
 

@@ -1,8 +1,8 @@
-package javahub.mod.musc.networking;
+package net.javahub.mod.musc.networking;
 
-import static javahub.mod.musc.Musc.CONFIG;
+import static net.javahub.mod.musc.Musc.CONFIG;
 
-import javahub.mod.musc.logging.MuscLogger;
+import net.javahub.mod.musc.logging.MuscLogger;
 import net.minecraft.server.MinecraftServer;
 
 import java.io.IOException;

@@ -1,8 +1,8 @@
-package javahub.mod.musc.config;
+package net.javahub.mod.musc.config;
 
-import static javahub.mod.musc.Musc.MOD_ID;
+import static net.javahub.mod.musc.Musc.MOD_ID;
 
-import javahub.mod.musc.logging.MuscLogger;
+import net.javahub.mod.musc.logging.MuscLogger;
 import net.fabricmc.loader.api.FabricLoader;
 
 import java.io.File;

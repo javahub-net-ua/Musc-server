@@ -12,11 +12,10 @@
     "repo": "https://github.com/Nozistance/Musc-server"
   },
   "license": "MIT",
-  "icon": "assets/musc/icon.png",
   "environment": "server",
   "entrypoints": {
     "main": [
-      "javahub.mod.musc.Musc"
+      "net.javahub.mod.musc.Musc"
     ]
   },
   "mixins": [

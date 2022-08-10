@@ -1,6 +1,6 @@
-package javahub.mod.musc.config;
+package net.javahub.mod.musc.config;
 
-import static javahub.mod.musc.Musc.MOD_ID;
+import static net.javahub.mod.musc.Musc.MOD_ID;
 
 import draylar.omegaconfig.OmegaConfig;
 import draylar.omegaconfig.api.Config;
