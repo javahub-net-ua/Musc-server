@@ -28,11 +28,6 @@ public class MuscConfig implements Config {
         return MOD_ID;
     }
 
-    @Override
-    public String getDirectory() {
-        return MOD_ID;
-    }
-
     public static MuscConfig init() {
         return OmegaConfig.register(MuscConfig.class);
     }
