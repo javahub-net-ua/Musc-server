@@ -1,7 +1,7 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "package": "javahub.mod.musc.mixin",
+  "package": "net.javahub.mod.musc.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
   ],

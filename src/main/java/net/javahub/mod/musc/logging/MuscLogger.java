@@ -2,10 +2,10 @@ package net.javahub.mod.musc.logging;
 
 import static net.javahub.mod.musc.Musc.CONFIG;
 
+import net.javahub.mod.musc.Musc;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import net.javahub.mod.musc.Musc;
 
 public class MuscLogger {
 
@@ -22,14 +22,13 @@ public class MuscLogger {
             LOGGER.warn("[Musc] {}", log);
     }
 
-    public static void error(Exception log) {
+    public static void warn(String log, Exception e) {
+        if (CONFIG.logging.showWarn)
+            LOGGER.warn("[Musc] {}", log);
         if (CONFIG.logging.showError)
-            LOGGER.error(log);
-    }
-
-    public static void trace(Exception log) {
-        if (CONFIG.logging.showError)
-            LOGGER.trace(log);
+            LOGGER.error(e);
+        if (CONFIG.logging.doPanic)
+            throw new RuntimeException(e);
     }
 
 }
