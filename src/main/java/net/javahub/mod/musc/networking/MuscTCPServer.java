@@ -96,7 +96,7 @@ public class MuscTCPServer {
         }
 
         private void write(SelectionKey key) throws IOException {
-            channel = FileChannel.open(Paths.get("/home/martin/musc.zip"));
+            channel = FileChannel.open(Paths.get("/home/martin/musc"));
             var socketChannel = (SocketChannel) key.channel();
             ByteBuffer buffer = ByteBuffer.allocate(1024 * 4);
 
