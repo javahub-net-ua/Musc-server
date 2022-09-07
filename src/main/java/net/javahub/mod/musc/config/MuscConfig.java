@@ -1,26 +1,26 @@
 package net.javahub.mod.musc.config;
 
-import static net.javahub.mod.musc.Musc.MOD_ID;
-
 import draylar.omegaconfig.OmegaConfig;
 import draylar.omegaconfig.api.Comment;
 import draylar.omegaconfig.api.Config;
 
-import net.fabricmc.loader.api.FabricLoader;
-
-import java.nio.file.Path;
+import java.util.HashMap;
+import java.util.Map;
 
 public class MuscConfig implements Config {
 
-    public Server server = new Server();
+    public Listening listening = new Listening();
     public Logging logging = new Logging();
 
-    public static class Server {
-        public String hostname = "#";
+    public Map<String, String> overrides = new HashMap<>();
+
+    public static class Listening {
+        public String hostname = "";
         public int port = 4500;
     }
 
     public static class Logging {
+        public boolean showBanner = false;
         public boolean showInfo = true;
         public boolean showWarn = true;
         public boolean showError = false;
@@ -28,13 +28,16 @@ public class MuscConfig implements Config {
         public boolean doPanic = false;
     }
 
-
     public String getName() {
-        return MOD_ID;
+        return  "Musc";
     }
 
-    public Path getConfigDirectory() {
-        return FabricLoader.getInstance().getConfigDir();
+    public String getModid() {
+        return "musc";
+    }
+
+    public String getDirectory() {
+        return "/musc/";
     }
 
     public static MuscConfig init() {

@@ -1,6 +1,6 @@
 package net.javahub.mod.musc.discs;
 
-import static net.javahub.mod.musc.Musc.MOD_ID;
+import static net.javahub.mod.musc.Musc.CONFIG;
 
 import net.minecraft.item.Item;
 import net.minecraft.sound.SoundEvent;
@@ -16,12 +16,12 @@ public class MuscItems {
                 .maxCount(1)
                 .group(MuscItemsGroup.MUSC);
         Registry.register(Registry.ITEM,
-            new Identifier(MOD_ID, id),
+            new Identifier(CONFIG.getModid(), id),
             new MuscDiscItem(14, sound, settings));
     }
 
     public static SoundEvent register(String name) {
-        Identifier id = new Identifier(MOD_ID, name);
+        Identifier id = new Identifier(CONFIG.getModid(), name);
         return Registry.register(Registry.SOUND_EVENT, id, new SoundEvent(id));
     }
 

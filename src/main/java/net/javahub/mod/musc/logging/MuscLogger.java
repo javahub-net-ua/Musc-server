@@ -10,21 +10,30 @@ import org.apache.logging.log4j.Logger;
 public class MuscLogger {
 
     private static final Logger LOGGER =
-            LogManager.getLogger(Musc.class.getName());
+            LogManager.getLogger(CONFIG.getName());
 
-    public static void info(String log) {
+    public void info(String log) {
         if (CONFIG.logging.showInfo)
-            LOGGER.info("[Musc] {}", log);
+            LOGGER.info(log);
     }
 
-    public static void warn(String log) {
-        if (CONFIG.logging.showWarn)
-            LOGGER.warn("[Musc] {}", log);
+    public MuscLogger() {
+        if (CONFIG.logging.showBanner) {
+            LOGGER.info("##########################");
+            LOGGER.info("#------JAVAHUB-MUSC------#");
+            LOGGER.info("#-https://javahub.net.ua-#");
+            LOGGER.info("##########################");
+        }
     }
 
-    public static void warn(String log, Exception e) {
+    public void warn(String log) {
         if (CONFIG.logging.showWarn)
-            LOGGER.warn("[Musc] {}", log);
+            LOGGER.warn(log);
+    }
+
+    public void warn(String log, Exception e) {
+        if (CONFIG.logging.showWarn)
+            LOGGER.warn(log);
         if (CONFIG.logging.showError)
             LOGGER.error(e);
         if (CONFIG.logging.doPanic)

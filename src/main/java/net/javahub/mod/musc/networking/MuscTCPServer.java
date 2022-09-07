@@ -1,15 +1,18 @@
 package net.javahub.mod.musc.networking;
 
 import static net.javahub.mod.musc.Musc.CONFIG;
+import static net.javahub.mod.musc.Musc.LOGGER;
 
-import net.javahub.mod.musc.logging.MuscLogger;
 import net.minecraft.server.MinecraftServer;
+
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.*;
 import java.nio.file.Paths;
 import java.util.Iterator;
+import java.util.Set;
 
 public class MuscTCPServer {
 
@@ -18,13 +21,14 @@ public class MuscTCPServer {
     private static Thread server;
 
     public MuscTCPServer() {
-        hostname = CONFIG.server.hostname;
-        port = CONFIG.server.port;
+        hostname = CONFIG.listening.hostname;
+        port = CONFIG.listening.port;
 
         try {
             server = new Thread(new TCPServer(hostname, port));
+            server.setName("MuscTCPServer");
         } catch (IOException e) {
-            MuscLogger.warn("FUCK!", e);
+            LOGGER.warn("FUCK!", e);
         }
     }
 
@@ -44,8 +48,11 @@ public class MuscTCPServer {
         private static FileChannel channel;
 
         TCPServer(String hostname, int port) throws IOException {
+            //get_zip()
+
             address = getAddress(hostname, port);
-            System.out.println(address);
+            LOGGER.info("Listening on " + address);
+
             serverSocketChannel = ServerSocketChannel.open();
             serverSocketChannel.configureBlocking(false);
             serverSocketChannel.socket().bind(address);
@@ -55,37 +62,42 @@ public class MuscTCPServer {
 
         @Override
         public void run() {
-            while (!Thread.currentThread().isInterrupted()) {
-                try {
+            LOGGER.info("Running MuscTCPServer...");
+            try {
+                channel = FileChannel.open(Paths.get("/home/martin/musc.zip"));
+                while (!Thread.currentThread().isInterrupted()) {
                     int select = 0;
                     select = selector.select();
                     if (select == 0)
                         continue;
-                    Iterator<SelectionKey> keys = selector.selectedKeys().iterator();
-                    while (keys.hasNext()) {
-                        SelectionKey key = keys.next();
-                        keys.remove();
+                    System.out.println(select);
+                    Set<SelectionKey> keys = selector.selectedKeys();
+                    Iterator<SelectionKey> iter = keys.iterator();
+                    //Iterator<SelectionKey> keys = selector.selectedKeys().iterator();
+                    while (iter.hasNext()) {
+                        SelectionKey key = iter.next();
                         if (!key.isValid())
                             continue;
                         if (key.isAcceptable())
                             accept(key);
-                        if (key.isWritable())
-                            write(key);
+                        if (key.isWritable()) {
+                            //new Thread(new TCPWriter(channel, key)).start();
+                            TCPWriter writer = new TCPWriter(channel, key);
+                            new Thread(writer::run).start();
+                        }
+                        iter.remove();
                     }
-                } catch (IOException e) {
-                    MuscLogger.warn("FUCK!", e);
                 }
+            } catch (IOException e) {
+                LOGGER.warn("FUCK!", e);
+            } finally {
+                closeConnections();
             }
-            closeConnections();
         }
 
         private InetSocketAddress getAddress(String hostname, int port) {
-            if (hostname == "") {
-                return new InetSocketAddress(port);
-            }
-            else {
-                return new InetSocketAddress(hostname, port);
-            }
+            if (hostname == "") return new InetSocketAddress(port);
+            else return new InetSocketAddress(hostname, port);
         }
 
         private void accept(SelectionKey key) throws IOException {
@@ -95,27 +107,16 @@ public class MuscTCPServer {
             socketChannel.register(selector, SelectionKey.OP_WRITE);
         }
 
-        private void write(SelectionKey key) throws IOException {
-            channel = FileChannel.open(Paths.get("/home/martin/musc"));
-            var socketChannel = (SocketChannel) key.channel();
-            ByteBuffer buffer = ByteBuffer.allocate(1024 * 4);
-
-            while (channel.read(buffer) != -1) {
-                buffer.flip();
-                socketChannel.write(buffer);
-                buffer.compact();
-            } key.channel().close();
-        }
-
         private void closeConnections() {
             try {
                 selector.close();
                 serverSocketChannel.socket().close();
                 serverSocketChannel.close();
             } catch (IOException e) {
-                MuscLogger.warn("Unable to close connections", e);
+                LOGGER.warn("Unable to close connections", e);
             }
         }
+
     }
 
 }
