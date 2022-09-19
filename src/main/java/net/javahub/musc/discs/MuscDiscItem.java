@@ -1,4 +1,4 @@
-package net.javahub.mod.musc.discs;
+package net.javahub.musc.discs;
 
 import net.minecraft.item.MusicDiscItem;
 import net.minecraft.sound.SoundEvent;

@@ -1,4 +1,4 @@
-package net.javahub.mod.musc.networking;
+package net.javahub.musc.networking;
 
 import java.io.IOException;
 import java.nio.channels.FileChannel;

@@ -1,4 +1,4 @@
-package net.javahub.mod.musc.config;
+package net.javahub.musc.config;
 
 import draylar.omegaconfig.OmegaConfig;
 import draylar.omegaconfig.api.Comment;
@@ -11,11 +11,10 @@ public class MuscConfig implements Config {
 
     public Listening listening = new Listening();
     public Logging logging = new Logging();
-
     public Map<String, String> overrides = new HashMap<>();
 
     public static class Listening {
-        public String hostname = "";
+        public String ip = "";
         public int port = 4500;
     }
 

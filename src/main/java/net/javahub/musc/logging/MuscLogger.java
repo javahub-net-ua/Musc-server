@@ -1,8 +1,6 @@
-package net.javahub.mod.musc.logging;
+package net.javahub.musc.logging;
 
-import static net.javahub.mod.musc.Musc.CONFIG;
-
-import net.javahub.mod.musc.Musc;
+import net.javahub.musc.Musc;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -10,15 +8,15 @@ import org.apache.logging.log4j.Logger;
 public class MuscLogger {
 
     private static final Logger LOGGER =
-            LogManager.getLogger(CONFIG.getName());
+            LogManager.getLogger(Musc.CONFIG.getName());
 
     public void info(String log) {
-        if (CONFIG.logging.showInfo)
+        if (Musc.CONFIG.logging.showInfo)
             LOGGER.info(log);
     }
 
     public MuscLogger() {
-        if (CONFIG.logging.showBanner) {
+        if (Musc.CONFIG.logging.showBanner) {
             LOGGER.info("##########################");
             LOGGER.info("#------JAVAHUB-MUSC------#");
             LOGGER.info("#-https://javahub.net.ua-#");
@@ -27,16 +25,16 @@ public class MuscLogger {
     }
 
     public void warn(String log) {
-        if (CONFIG.logging.showWarn)
+        if (Musc.CONFIG.logging.showWarn)
             LOGGER.warn(log);
     }
 
     public void warn(String log, Exception e) {
-        if (CONFIG.logging.showWarn)
+        if (Musc.CONFIG.logging.showWarn)
             LOGGER.warn(log);
-        if (CONFIG.logging.showError)
+        if (Musc.CONFIG.logging.showError)
             LOGGER.error(e);
-        if (CONFIG.logging.doPanic)
+        if (Musc.CONFIG.logging.doPanic)
             throw new RuntimeException(e);
     }
 

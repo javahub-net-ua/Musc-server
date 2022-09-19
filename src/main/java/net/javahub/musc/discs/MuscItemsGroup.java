@@ -1,6 +1,6 @@
-package net.javahub.mod.musc.discs;
+package net.javahub.musc.discs;
 
-import static net.javahub.mod.musc.Musc.CONFIG;
+import static net.javahub.musc.Musc.CONFIG;
 
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;

@@ -1,4 +1,4 @@
-package net.javahub.mod.musc.records;
+package net.javahub.musc.records;
 
 import java.util.regex.Pattern;
 
