@@ -1,42 +1,46 @@
 package net.javahub.musc.records;
 
-import java.util.regex.Pattern;
+import java.io.Serializable;
+import java.nio.file.Path;
 
-class Record {
+public class Record {
+    private final String title;
+    private final Path path;
+    private final String id;
 
-    private String name;
-    private String soundEventID;
-    private String itemID;
-
-    Record(String fileName, String id) {
-        if(id == null) id = getID(fileName);
-        name = fileName;
-        soundEventID = id.replace("@", ".");
-        itemID = id.replace("@", "_");
+    private Record(String title, Path path, String id) {
+        this.title = title;
+        this.path = path;
+        this.id = id;
     }
 
-    private static String getID(String fileName) {
-        if (!Pattern.matches(".* - .*", fileName))
-            throw new IllegalArgumentException(fileName);
-        String id = fileName.toLowerCase()
-                .replaceAll(" - ", "@")
-                .replaceAll("[,'\\(\\)]", "")
-                .replaceAll("[ -]", "_");
-        if(!id.matches("[[a-z_@]\\d]+$"))
-            throw new IllegalArgumentException(fileName);
+    public static Record buildRecord(String title, Path path, String override) throws IllegalArgumentException {
+        return override == null ? new Record(title, path, format(title)) : new Record(title, path, verify(override));
+    }
+
+    private static String verify(String id) throws IllegalArgumentException {
+        if (!id.matches("(.+?)@(.+?)") || !id.matches("[a-z0-9@._-]+$")) throw new IllegalArgumentException(id);
         return id;
     }
 
-    public String getName() {
-        return name;
+    private static String format(String title) throws IllegalArgumentException {
+        String result = title.toLowerCase()
+                .replaceFirst(" - ", "@")
+                .replaceAll("[\\p{Punct}&&[^@-]]", "")
+                .replaceAll("[\\s-]", "_");
+        return verify(result);
     }
 
+    public String getTitle() {
+        return title;
+    }
+    public Path getPath() {
+        return path;
+    }
     public String getSoundEventID() {
-        return soundEventID;
+        return id.replace("@", ".");
     }
-
     public String getItemID() {
-        return itemID;
+        return "music_disc_" + id.replace("@", "_");
     }
-
 }

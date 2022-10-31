@@ -2,20 +2,20 @@
   "schemaVersion": 1,
   "id": "musc",
   "version": "${version}",
-  "name": "Musc",
-  "description": "Add your own music as music discs. Requires resource-pack and client mod",
+  "name": "Musc-server",
+  "description": "Add your own music as music discs. Requires client mod",
   "authors": [
-    "Nozistance"
+    "Martin Nozistance"
   ],
   "contact": {
     "website": "javahub.net.ua",
-    "repo": "https://github.com/Nozistance/Musc-server"
+    "repo": "https://github.com/javahub-net-ua/Musc-server"
   },
   "license": "MIT",
   "environment": "server",
   "entrypoints": {
     "main": [
-      "net.javahub.mod.musc.Musc"
+      "net.javahub.musc.Musc"
     ]
   },
   "mixins": [

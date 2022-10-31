@@ -10,9 +10,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
 
 public abstract class MuscItemsGroup implements ModInitializer {
-
-    public static final ItemGroup MUSC = FabricItemGroupBuilder.create(
-            new Identifier(CONFIG.getModid(), "group"))
+    public static final ItemGroup MUSC_GROUP = FabricItemGroupBuilder.create(
+            new Identifier(CONFIG.getModID(), "item_group"))
             .icon(() -> new ItemStack(Blocks.JUKEBOX)).build();
-
 }

@@ -1,75 +1,125 @@
 package net.javahub.musc.networking;
 
-import java.io.*;
+import net.minecraft.server.MinecraftServer;
+
+import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import static net.javahub.musc.Musc.CONFIG;
+import static net.javahub.musc.Musc.LOGGER;
+
 public class MuscTCPServer {
-
-    public static Selector selector;
-    public static ServerSocketChannel server;
-    public static MuscTCPServer instance;
-    public static byte[] file;
-    public static Map<SocketChannel, Integer> connections = new HashMap<>();
-
-    static {
+    private static MuscTCPServer instance;
+    private Thread tcpServer;
+    private MuscTCPServer(Path resources) {
         try {
-            instance = new MuscTCPServer();
+            InetSocketAddress address = new InetSocketAddress(CONFIG.distribution.port);
+            tcpServer = new Thread(new TCPServer(address, resources));
+            tcpServer.setName("MuscTCPServer Thread");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
-    
-    MuscTCPServer() throws IOException {
-        file = new FileInputStream("/home/martin/musc-full.tar").readAllBytes();
-        selector = Selector.open();
-        server = ServerSocketChannel.open();
-        server.bind(new InetSocketAddress(3000));
-        server.configureBlocking(false);
-        server.register(selector, SelectionKey.OP_ACCEPT);
+
+    public static synchronized MuscTCPServer getInstance(Path resources) {
+        if (instance == null)
+            instance = new MuscTCPServer(resources);
+        return instance;
     }
 
-    public static void main(String[] args) throws IOException {
-        while (true) {
-            selector.select();
-            Iterator<SelectionKey> keys = selector.selectedKeys().iterator();
+    public void start(MinecraftServer minecraftServer) {
+        if (!tcpServer.isAlive())
+            tcpServer.start();
+    }
 
-            while(keys.hasNext()) {
-                SelectionKey key = keys.next();
-                keys.remove();
-                if (!key.isValid())
-                    continue;
-                if (key.isAcceptable())
-                    accept(key);
-                if (key.isWritable())
-                    write(key);
+    public void stop(MinecraftServer minecraftServer) {
+        tcpServer.interrupt();
+    }
+
+    private static class TCPServer implements Runnable {
+        Map<SocketChannel, Integer> sessions = new HashMap<>();
+        ServerSocketChannel serverSocketChannel;
+        Selector selector;
+        byte[] resources;
+
+        public TCPServer(InetSocketAddress address, Path resourcePath) throws IOException {
+            resources = Files.readAllBytes(resourcePath);
+            selector = Selector.open();
+            serverSocketChannel = ServerSocketChannel.open();
+            serverSocketChannel.bind(address);
+            serverSocketChannel.configureBlocking(false);
+            serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
+        }
+
+        @Override
+        public void run() {
+            System.out.println(resources.length);
+            try {
+                while (!Thread.currentThread().isInterrupted()) {
+                    selector.select();
+                    Iterator<SelectionKey> keys = selector.selectedKeys().iterator();
+                    while (keys.hasNext()) {
+                        SelectionKey key = keys.next();
+                        keys.remove();
+                        if (!key.isValid())
+                            continue;
+                        if (key.isAcceptable())
+                            accept(key);
+                        if (key.isWritable())
+                            write(key);
+                    }
+                }
+            } catch (IOException e) {
+                LOGGER.error(e);
+            } finally {
+                closeConnection();
+            }
+        }
+
+        private void accept(SelectionKey key) throws IOException {
+            var serverSocketChannel = (ServerSocketChannel) key.channel();
+            SocketChannel client = serverSocketChannel.accept();
+            client.configureBlocking(false);
+            client.register(selector, SelectionKey.OP_WRITE);
+            sessions.put(client, 0);
+        }
+
+        private void write(SelectionKey key) throws IOException {
+            var client = (SocketChannel) key.channel();
+            int pos = sessions.get(client);
+            try {
+                pos += client.write(ByteBuffer.wrap(resources, pos, resources.length - pos));
+                sessions.put(client, pos);
+                if (pos == resources.length) {
+                    LOGGER.info("END " + client.getRemoteAddress());
+                    sessions.remove(client);
+                    client.close();
+                }
+            } catch (IOException e) {
+                LOGGER.error(e);
+                sessions.remove(client);
+                client.close();
+            }
+        }
+
+        private void closeConnection() {
+            System.out.println("Closing server down");
+            if (selector != null) {
+                try {
+                    selector.close();
+                    serverSocketChannel.socket().close();
+                    serverSocketChannel.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
-
-    private static void accept(SelectionKey key) throws IOException {
-         var serverSocketChannel = (ServerSocketChannel) key.channel();
-         SocketChannel client = serverSocketChannel.accept();
-         client.configureBlocking(false);
-         client.register(selector, SelectionKey.OP_WRITE);
-         if (connections.get(client) == null) {
-             connections.put(client, 0);
-         }
-    }
-
-    private static void write(SelectionKey key) throws IOException {
-        var client = (SocketChannel) key.channel();
-        int pos = connections.get(client);
-        pos += client.write(ByteBuffer.wrap(file, pos, file.length - pos));
-        if (pos != file.length) connections.put(client, pos);
-        else {
-            connections.remove(client);
-            client.close();
-        }
-    }
-
 }

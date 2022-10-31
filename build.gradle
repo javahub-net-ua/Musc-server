@@ -30,6 +30,9 @@ dependencies {
     include "com.github.Draylar.omega-config:omega-config-base:${project.omega_config_version}"
     modImplementation "com.github.Draylar.omega-config:omega-config-base:${project.omega_config_version}"
 
+    // GSON
+    implementation "com.google.code.gson:gson:${project.gson_version}"
+
     // Fabric API. This is technically optional, but you probably want it anyway.
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 }
