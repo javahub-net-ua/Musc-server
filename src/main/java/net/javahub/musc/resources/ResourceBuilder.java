@@ -45,29 +45,31 @@ public class ResourceBuilder {
         Path textures = Files.createDirectories(Path.of(root + "/textures/item"));
         genLangFile(lang);
         //genSoundFiles(sounds);
-        genSoundsFile(sounds);
+        genSoundsFile(root);
         genModelFiles(models);
         genTextures(textures);
         return pack(path);
     }
 
     private void genLangFile(Path lang) throws IOException {
-        SortedMap<String, String> records = new TreeMap<>();
-        records.putAll(RECORDS.stream()
+        Map<String, String> records = RECORDS.stream()
                 .collect(Collectors.toMap(
                         r -> String.format("item.musc.%s", r.getItemID()),
-                        r -> "Music Disc")));
-        records.putAll(RECORDS.stream()
+                        r -> "Music Disc"));
+        Map<String, String> descriptions = RECORDS.stream()
                 .collect(Collectors.toMap(
                         r -> String.format("item.musc.%s.description", r.getItemID()),
-                        r -> r.getTitle())));
+                        r -> r.getTitle()));
         try (Writer writer = Files.newBufferedWriter(Path.of(lang + "/lang.json"))) {
-            GSON.toJson(records, writer);
+            GSON.toJson(new Lang(records, descriptions).RECORDS, writer);
         }
     }
 
-    private void genSoundsFile(Path musc) {
-
+    private void genSoundsFile(Path musc) throws IOException {
+        Sounds sounds = new Sounds(RECORDS);
+        try (Writer writer = Files.newBufferedWriter(Path.of(musc + "/sounds.json"))) {
+            GSON.toJson(sounds.RECORDS, writer);
+        }
     }
 
     private void genSoundFiles(Path musc) {
@@ -108,7 +110,7 @@ public class ResourceBuilder {
                             Files.copy(path, zs);
                             zs.closeEntry();
                         } catch (IOException e) {
-                            LOGGER.error(e);
+                            throw new RuntimeException(e);
                         }
                     });
             return dst;

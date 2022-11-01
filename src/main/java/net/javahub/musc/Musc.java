@@ -11,6 +11,8 @@ import net.javahub.musc.resources.ResourceBuilder;
 
 import java.nio.file.Path;
 import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 public class Musc implements ModInitializer {
     public static final MuscConfig CONFIG = MuscConfig.init();
