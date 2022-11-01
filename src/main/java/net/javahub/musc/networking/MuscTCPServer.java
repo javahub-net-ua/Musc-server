@@ -60,7 +60,6 @@ public class MuscTCPServer {
 
         @Override
         public void run() {
-            System.out.println(resources.length);
             try {
                 while (!Thread.currentThread().isInterrupted()) {
                     selector.select();
@@ -98,7 +97,7 @@ public class MuscTCPServer {
                 pos += client.write(ByteBuffer.wrap(resources, pos, resources.length - pos));
                 sessions.put(client, pos);
                 if (pos == resources.length) {
-                    LOGGER.info("END " + client.getRemoteAddress());
+//                    LOGGER.info("END " + client.getRemoteAddress());
                     sessions.remove(client);
                     client.close();
                 }

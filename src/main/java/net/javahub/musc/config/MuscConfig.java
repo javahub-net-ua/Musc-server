@@ -15,16 +15,21 @@ import java.util.Map;
 import static net.javahub.musc.Musc.CONFIG;
 
 public class MuscConfig implements Config {
-
+    public Resources resources = new Resources();
     public Distribution distribution = new Distribution();
     public Logging logging = new Logging();
     public Map<String, String> overrides = new HashMap<>();
     public Map<String, String> mobBinding = new HashMap<>();
 
+    public static class Resources {
+        public String pack_version = "9";
+        public String description = "Musc resources :)";
+        public String pathOverride = "";
+    }
+
     public static class Distribution {
         public int port = 4500;
         public boolean useMuscTCPServer = true;
-        public Path pathOverride = Path.of("");
     }
 
     public static class Logging {

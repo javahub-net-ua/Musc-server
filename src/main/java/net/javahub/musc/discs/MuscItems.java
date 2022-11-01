@@ -29,5 +29,4 @@ public class MuscItems {
         SoundEvent sound = register("music_disc." + id);
         register("music_disc_" + id, sound);
     }
-
 }

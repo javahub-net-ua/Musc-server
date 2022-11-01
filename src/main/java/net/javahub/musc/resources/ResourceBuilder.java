@@ -1,11 +1,13 @@
 package net.javahub.musc.resources;
 
 import com.google.gson.GsonBuilder;
+import net.javahub.musc.Musc;
 import net.javahub.musc.records.Record;
 import net.minecraft.client.realms.util.JsonUtils;
 import com.google.gson.Gson;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.Serializable;
 import java.io.Writer;
 import java.nio.file.Files;
@@ -43,13 +45,30 @@ public class ResourceBuilder {
         Path sounds = Files.createDirectories(Path.of(root + "/sounds/musc"));
         Path models = Files.createDirectories(Path.of(root + "/models/item"));
         Path textures = Files.createDirectories(Path.of(root + "/textures/item"));
+        genPackMCMeta(path);
+        genPackIcon(path);
         genLangFile(lang);
-        //genSoundFiles(sounds);
+        genSoundFiles(sounds);
         genSoundsFile(root);
         genModelFiles(models);
         genTextures(textures);
         return pack(path);
     }
+
+    private void genPackIcon(Path path) {
+        try (InputStream is = Musc.class.getClassLoader().getResourceAsStream("musc/pack.png")) {
+            Files.copy(is, Path.of(path + "/pack.png"));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void genPackMCMeta(Path path) throws IOException {
+        try (Writer writer = Files.newBufferedWriter(Path.of(path + "/pack.mcmeta"))) {
+            GSON.toJson(new PackMCMeta(), writer);
+        }
+    }
+
 
     private void genLangFile(Path lang) throws IOException {
         Map<String, String> records = RECORDS.stream()
@@ -85,7 +104,7 @@ public class ResourceBuilder {
     private void genModelFiles(Path models) {
         RECORDS.forEach(r -> {
             try (Writer writer = Files.newBufferedWriter(Path.of(String.format("%s/%s.json", models, r.getItemID())))) {
-                Model model = new Model("musc:" + r.getItemID());
+                Model model = new Model("musc:music_disc_" + r.getItemID());
                 GSON.toJson(model, writer);
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -94,7 +113,13 @@ public class ResourceBuilder {
     }
 
     private void genTextures(Path textures) {
-
+        RECORDS.forEach(r -> {
+            try (InputStream is = Musc.class.getClassLoader().getResourceAsStream("musc/disc.png")) {
+                Files.copy(is, Path.of(String.format("%s/%s.png", textures, r.getItemID())));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
 
     private Path pack(Path src) throws IOException {
@@ -118,8 +143,8 @@ public class ResourceBuilder {
     }
 
     private Path getDestination() throws IOException {
-        return CONFIG.distribution.useMuscTCPServer ?
+        return Objects.equals(CONFIG.resources.pathOverride, "") ?
                 Files.createTempFile("musc", ".zip") :
-                Files.createFile(CONFIG.distribution.pathOverride);
+                Files.createFile(Path.of(CONFIG.resources.pathOverride));
     }
 }

@@ -1,12 +1,22 @@
 package net.javahub.musc.resources;
 
+import com.google.gson.annotations.SerializedName;
 import net.javahub.musc.records.Record;
 
 import java.io.Serializable;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static net.javahub.musc.Musc.CONFIG;
+
+class PackMCMeta implements Serializable {
+    @SerializedName("pack")
+    final Map<String, String> PACK = new LinkedHashMap<>();
+
+    PackMCMeta() {
+        PACK.put("pack_format", CONFIG.resources.pack_version);
+        PACK.put("description", CONFIG.resources.description);
+    }
+}
 
 class Lang implements Serializable {
     final SortedMap<String, String> RECORDS = new TreeMap<>();
@@ -25,7 +35,7 @@ class Sounds {
         records.forEach(r -> soundEventIDs.add(r.getSoundEventID()));
         for (String soundEventID : soundEventIDs) {
             Map<String, String> m1 = new LinkedHashMap<>();
-            m1.put("name", "musc/music_disc." + soundEventID);
+            m1.put("name", "musc/" + soundEventID);
             m1.put("stream", "true");
 
             List<Map<String, String>> l1 = new ArrayList<>();

@@ -11,8 +11,6 @@ import net.javahub.musc.resources.ResourceBuilder;
 
 import java.nio.file.Path;
 import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeSet;
 
 public class Musc implements ModInitializer {
     public static final MuscConfig CONFIG = MuscConfig.init();
@@ -23,10 +21,10 @@ public class Musc implements ModInitializer {
         Set<Record> records = RecordUtils.getRecords();
         ResourceBuilder resourceBuilder = new ResourceBuilder(records);
         Path resources = resourceBuilder.getResources();
-//        if (CONFIG.distribution.useMuscTCPServer) {
-//            MuscTCPServer SERVER = MuscTCPServer.getInstance(resources);
-//            ServerLifecycleEvents.SERVER_STARTING.register(SERVER::start);
-//            ServerLifecycleEvents.SERVER_STOPPING.register(SERVER::stop);
-//        }
+        if (CONFIG.distribution.useMuscTCPServer) {
+            MuscTCPServer SERVER = MuscTCPServer.getInstance(resources);
+            ServerLifecycleEvents.SERVER_STARTING.register(SERVER::start);
+            ServerLifecycleEvents.SERVER_STOPPING.register(SERVER::stop);
+        }
     }
 }

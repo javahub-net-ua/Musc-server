@@ -15,11 +15,11 @@ public class Record {
     }
 
     public static Record buildRecord(String title, Path path, String override) throws IllegalArgumentException {
-        return override == null ? new Record(title, path, format(title)) : new Record(title, path, verify(override));
+        return override == null ? new Record(title, path, format(title)) : new Record(title, path, verify(override, title));
     }
 
-    private static String verify(String id) throws IllegalArgumentException {
-        if (!id.matches("(.+?)@(.+?)") || !id.matches("[a-z0-9@._-]+$")) throw new IllegalArgumentException(id);
+    private static String verify(String id, String title) throws IllegalArgumentException {
+        if (!id.matches("(.+?)@(.+?)") || !id.matches("[a-z0-9@._-]+$")) throw new IllegalArgumentException(title);
         return id;
     }
 
@@ -28,7 +28,7 @@ public class Record {
                 .replaceFirst(" - ", "@")
                 .replaceAll("[\\p{Punct}&&[^@-]]", "")
                 .replaceAll("[\\s-]", "_");
-        return verify(result);
+        return verify(result, title);
     }
 
     public String getTitle() {
