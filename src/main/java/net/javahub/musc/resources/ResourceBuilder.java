@@ -14,6 +14,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -125,19 +126,19 @@ public class ResourceBuilder {
     private Path pack(Path src) throws IOException {
         Path dst = getDestination();
         try (ZipOutputStream zs = new ZipOutputStream(Files.newOutputStream(dst))) {
-            zs.setLevel(0);
-            Files.walk(src)
-                    .filter(path -> !Files.isDirectory(path))
-                    .forEach(path -> {
-                        ZipEntry zipEntry = new ZipEntry(src.relativize(path).toString());
-                        try {
-                            zs.putNextEntry(zipEntry);
-                            Files.copy(path, zs);
-                            zs.closeEntry();
-                        } catch (IOException e) {
-                            throw new RuntimeException(e);
-                        }
-                    });
+            try (Stream<Path> stream = Files.walk(src)) {
+                        stream.filter(path -> !Files.isDirectory(path))
+                        .forEach(path -> {
+                            ZipEntry zipEntry = new ZipEntry(src.relativize(path).toString());
+                            try {
+                                zs.putNextEntry(zipEntry);
+                                Files.copy(path, zs);
+                                zs.closeEntry();
+                            } catch (IOException e) {
+                                throw new RuntimeException(e);
+                            }
+                        });
+            }
             return dst;
         }
     }
