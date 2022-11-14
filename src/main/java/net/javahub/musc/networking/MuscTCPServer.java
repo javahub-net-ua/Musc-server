@@ -16,13 +16,15 @@ import static net.javahub.musc.Musc.CONFIG;
 import static net.javahub.musc.Musc.LOGGER;
 
 public class MuscTCPServer {
+
     private static MuscTCPServer instance;
-    private Thread tcpServer;
+    private final Thread tcpServer;
+
     private MuscTCPServer(Path resources) {
         try {
-            InetSocketAddress address = new InetSocketAddress(CONFIG.distribution.port);
+            InetSocketAddress address = new InetSocketAddress(CONFIG.distribution().port);
             tcpServer = new Thread(new TCPServer(address, resources));
-            tcpServer.setName("MuscTCPServer Thread");
+            tcpServer.setName("MuscTCPServer");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -46,10 +48,12 @@ public class MuscTCPServer {
     private static class TCPServer implements Runnable {
         Map<SocketChannel, Integer> sessions = new HashMap<>();
         ServerSocketChannel serverSocketChannel;
+        InetSocketAddress address;
         Selector selector;
         byte[] resources;
 
         public TCPServer(InetSocketAddress address, Path resourcePath) throws IOException {
+            this.address = address;
             resources = Files.readAllBytes(resourcePath);
             selector = Selector.open();
             serverSocketChannel = ServerSocketChannel.open();
@@ -61,6 +65,7 @@ public class MuscTCPServer {
         @Override
         public void run() {
             try {
+                LOGGER.info("Server listening on " + address);
                 while (!Thread.currentThread().isInterrupted()) {
                     selector.select();
                     Iterator<SelectionKey> keys = selector.selectedKeys().iterator();
@@ -90,26 +95,21 @@ public class MuscTCPServer {
             sessions.put(client, 0);
         }
 
-        private void write(SelectionKey key) throws IOException {
-            var client = (SocketChannel) key.channel();
-            int pos = sessions.get(client);
-            try {
-                pos += client.write(ByteBuffer.wrap(resources, pos, resources.length - pos));
-                sessions.put(client, pos);
+        private void write(SelectionKey key) {
+            try (SocketChannel client = (SocketChannel) key.channel()) {
+                int pos = sessions.get(client);
+                sessions.put(client, client.write(ByteBuffer.wrap(resources, pos, resources.length - pos)));
                 if (pos == resources.length) {
-//                    LOGGER.info("END " + client.getRemoteAddress());
+                    LOGGER.info("END " + client.getRemoteAddress());
                     sessions.remove(client);
-                    client.close();
                 }
             } catch (IOException e) {
                 LOGGER.error(e);
-                sessions.remove(client);
-                client.close();
             }
         }
 
         private void closeConnection() {
-            System.out.println("Closing server down");
+            LOGGER.info("Closing server down");
             if (selector != null) {
                 try {
                     selector.close();
