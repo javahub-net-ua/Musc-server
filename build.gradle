@@ -7,16 +7,8 @@ version = project.mod_version
 group = project.maven_group
 
 repositories {
-    // Add repositories to retrieve artifacts from in here.
-    // You should only use this when depending on other mods because
-    // Loom adds the essential maven repositories to download Minecraft and libraries from automatically.
-    // See https://docs.gradle.org/current/userguide/declaring_repositories.html
-    // for more information about repositories.
     maven {
-        url = "https://jitpack.io"
-        content {
-            includeGroup "com.github.Draylar.omega-config"
-        }
+        url 'https://maven.wispforest.io'
     }
 }
 
@@ -26,9 +18,10 @@ dependencies {
     mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
-    // ΩConfig Base
-    include "com.github.Draylar.omega-config:omega-config-base:${project.omega_config_version}"
-    modImplementation "com.github.Draylar.omega-config:omega-config-base:${project.omega_config_version}"
+    // oωo (owo-lib)
+    modImplementation "io.wispforest:owo-lib:${project.owo_version}"
+    annotationProcessor "io.wispforest:owo-lib:${project.owo_version}"
+    include "io.wispforest:owo-sentinel:${project.owo_version}"
 
     // GSON
     implementation "com.google.code.gson:gson:${project.gson_version}"
@@ -46,7 +39,7 @@ processResources {
     }
 }
 
-def targetJavaVersion = 17
+def targetJavaVersion = 18
 tasks.withType(JavaCompile).configureEach {
     // ensure that the encoding is set to UTF-8, no matter what the system default is
     // this fixes some edge cases with special characters not displaying correctly

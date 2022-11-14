@@ -5,7 +5,7 @@
   "name": "Musc-server",
   "description": "Add your own music as music discs. Requires client mod",
   "authors": [
-    "Martin Nozistance"
+    "Nozistance"
   ],
   "contact": {
     "website": "javahub.net.ua",
@@ -14,8 +14,14 @@
   "license": "MIT",
   "environment": "server",
   "entrypoints": {
+    "preLaunch": [
+      "net.javahub.musc.prelaunch.MuscPreLaunch"
+    ],
     "main": [
       "net.javahub.musc.Musc"
+    ],
+    "server": [
+      "net.javahub.musc.server.MuscServer"
     ]
   },
   "mixins": [
@@ -24,6 +30,6 @@
   "depends": {
     "fabricloader": ">=0.14.8",
     "fabric": "*",
-    "minecraft": "1.19.*"
+    "minecraft": "1.19.2"
   }
 }

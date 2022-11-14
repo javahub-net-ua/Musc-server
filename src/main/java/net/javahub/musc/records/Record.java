@@ -1,11 +1,17 @@
 package net.javahub.musc.records;
 
-import java.io.Serializable;
+import com.google.gson.annotations.Expose;
+import net.javahub.musc.Musc;
+import net.minecraft.util.Identifier;
+
 import java.nio.file.Path;
 
 public class Record {
+
+    @Expose
     private final String title;
     private final Path path;
+    @Expose
     private final String id;
 
     private Record(String title, Path path, String id) {
@@ -14,7 +20,7 @@ public class Record {
         this.id = id;
     }
 
-    public static Record buildRecord(String title, Path path, String override) throws IllegalArgumentException {
+    public static Record of(String title, Path path, String override) throws IllegalArgumentException {
         return override == null ? new Record(title, path, format(title)) : new Record(title, path, verify(override, title));
     }
 
@@ -25,6 +31,7 @@ public class Record {
 
     private static String format(String title) throws IllegalArgumentException {
         String result = title.toLowerCase()
+                .replaceAll(" \\(.*?\\)", "")
                 .replaceFirst(" - ", "@")
                 .replaceAll("[\\p{Punct}&&[^@-]]", "")
                 .replaceAll("[\\s-]", "_");
@@ -34,13 +41,32 @@ public class Record {
     public String getTitle() {
         return title;
     }
+
     public Path getPath() {
         return path;
     }
-    public String getSoundEventID() {
-        return id.replace("@", ".");
+
+    public Identifier getSoundEventID() {
+        return new Identifier(Musc.MOD_ID, id.replace("@", "."));
     }
-    public String getItemID() {
-        return "music_disc_" + id.replace("@", "_");
+
+    public Identifier getItemID() {
+        return new Identifier(Musc.MOD_ID, String.format("music_disc_%s", id.replace("@", "_")));
+    }
+
+    public String getItemName() {
+        return String.format("music_disc_%s", id.replace("@", "_"));
+    }
+
+    public String getSoundFileName() {
+        return String.format("%s.ogg", id.replace("@", "."));
+    }
+
+    public String getModelFileName() {
+        return String.format("music_disc_%s.json", id.replace("@", "_"));
+    }
+
+    public String getSoundName() {
+        return id.replace("@", ".");
     }
 }
