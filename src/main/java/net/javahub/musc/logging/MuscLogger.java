@@ -1,7 +1,7 @@
 package net.javahub.musc.logging;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static net.javahub.musc.Musc.CONFIG;
 
@@ -10,7 +10,7 @@ public class MuscLogger {
     private static final Logger LOGGER = getLogger(CONFIG.name());
 
     private static Logger getLogger(String name) {
-        Logger logger = LogManager.getLogger(name);
+        Logger logger = LoggerFactory.getLogger(name);
         if (CONFIG.logging().showHints)
             logger.info("Musc-server Wiki: https://github.com/javahub-net-ua/Musc-server/wiki");
         return logger;
@@ -28,6 +28,6 @@ public class MuscLogger {
 
     public void error(Exception e) {
         if (CONFIG.logging().showError)
-            LOGGER.error(e);
+            LOGGER.error(e.getMessage());
     }
 }
