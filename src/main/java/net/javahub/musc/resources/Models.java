@@ -12,7 +12,7 @@ import static net.javahub.musc.Musc.RECORDS;
 import static net.javahub.musc.resources.ResourcesProvider.GSON;
 import static net.javahub.musc.resources.Template.MODELS;
 
-public class Models implements Resource {
+class Models implements Resource {
 
     @Override
     public void getResource() throws IOException {

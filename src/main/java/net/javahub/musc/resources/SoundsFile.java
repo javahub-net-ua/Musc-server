@@ -13,7 +13,7 @@ import static net.javahub.musc.Musc.RECORDS;
 import static net.javahub.musc.resources.ResourcesProvider.GSON;
 import static net.javahub.musc.resources.Template.ASSETS;
 
-public class SoundsFile implements Resource {
+class SoundsFile implements Resource {
 
     @Override
     public void getResource() throws IOException {

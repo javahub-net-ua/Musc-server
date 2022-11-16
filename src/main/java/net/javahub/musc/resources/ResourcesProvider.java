@@ -16,7 +16,7 @@ import static net.javahub.musc.Musc.CONFIG;
 import static net.javahub.musc.Musc.LOGGER;
 import static net.javahub.musc.resources.Template.ROOT;
 
-public class ResourcesProvider {
+class ResourcesProvider {
 
     protected static final Gson GSON = new GsonBuilder().excludeFieldsWithoutExposeAnnotation()
             .disableHtmlEscaping().setPrettyPrinting().create();

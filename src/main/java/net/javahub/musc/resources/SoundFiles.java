@@ -10,7 +10,7 @@ import java.nio.file.StandardCopyOption;
 import static net.javahub.musc.Musc.RECORDS;
 import static net.javahub.musc.resources.Template.SOUNDS;
 
-public class SoundFiles implements Resource {
+class SoundFiles implements Resource {
 
     @Override
     public void getResource() throws IOException {

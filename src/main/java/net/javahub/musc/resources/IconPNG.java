@@ -10,7 +10,7 @@ import java.nio.file.StandardCopyOption;
 
 import static net.javahub.musc.resources.Template.ROOT;
 
-public class IconPNG implements Resource {
+class IconPNG implements Resource {
 
     @Override
     public void getResource() throws IOException {
