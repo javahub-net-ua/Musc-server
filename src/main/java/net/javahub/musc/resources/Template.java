@@ -2,15 +2,15 @@ package net.javahub.musc.resources;
 
 import java.io.File;
 import java.nio.file.Path;
+import java.util.stream.Stream;
 
-enum Template {
-    ROOT (Path.of(".musc")),
-    MUSC (Path.of(ROOT + File.separator + "assets" + File.separator + "musc")),
-    LANG (Path.of(ROOT + File.separator + "lang")),
-    SOUNDS (Path.of(ROOT + File.separator + "sounds" + File.separator + "records")),
-    MODELS (Path.of(ROOT + File.separator + "models" + File.separator + "item"));
-
-    Template(Path path) {
-
+class Template {
+    public static final Path ROOT = Path.of(".musc");
+    public static final Path ASSETS = Path.of(".musc", "assets", "musc");
+    public static final Path LANG = Path.of(".musc", "assets", "musc", "lang");
+    public static final Path SOUNDS = Path.of(".musc", "assets", "musc", "sounds", "records");
+    public static final Path MODELS = Path.of(".musc", "assets", "musc", "models", "item");
+    static {
+        Stream.of(ROOT, ASSETS, LANG, SOUNDS, MODELS).map(Path::toFile).forEach(File::mkdirs);
     }
 }
