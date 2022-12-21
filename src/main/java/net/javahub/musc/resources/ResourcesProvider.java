@@ -16,14 +16,16 @@ import static net.javahub.musc.Musc.CONFIG;
 import static net.javahub.musc.Musc.LOGGER;
 import static net.javahub.musc.resources.Template.ROOT;
 
-class ResourcesProvider {
+public class ResourcesProvider {
 
-    protected static final Gson GSON = new GsonBuilder().excludeFieldsWithoutExposeAnnotation()
-            .disableHtmlEscaping().setPrettyPrinting().create();
+    protected static final Gson GSON = new GsonBuilder()
+    .excludeFieldsWithoutExposeAnnotation().disableHtmlEscaping()
+    .setPrettyPrinting().create();
 
     public static Path getResources() {
         try {
-            for (Resource resource : Resources.getResources()) resource.getResource();
+            for (Resource resource : Resources.getResources())
+                resource.getResource();
             return pack();
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -32,7 +34,7 @@ class ResourcesProvider {
 
     private static Path pack() throws IOException {
         LOGGER.info("packing...");
-        Path dst = Path.of(CONFIG.resources().pathToResources);
+        Path dst = Path.of(CONFIG.resources.pathToResources);
         try (ZipOutputStream zs = new ZipOutputStream(Files.newOutputStream(dst,
                 StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.CREATE));
              Stream<Path> stream = Files.walk(ROOT)) {

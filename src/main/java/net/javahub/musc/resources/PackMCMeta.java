@@ -18,8 +18,8 @@ class PackMCMeta implements Resource {
         try (Writer writer = Files.newBufferedWriter(Path.of(ROOT.toString(), "pack.mcmeta"))) {
             JsonObject json = new JsonObject();
             JsonObject pack = new JsonObject();
-            pack.addProperty("pack_format", CONFIG.resources().packFormat);
-            pack.addProperty("description", CONFIG.resources().description);
+            pack.addProperty("pack_format", CONFIG.resources.packFormat);
+            pack.addProperty("description", CONFIG.resources.description);
             json.add("pack", pack);
             GSON.toJson(json, writer);
         }

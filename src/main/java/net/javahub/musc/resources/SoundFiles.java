@@ -1,6 +1,6 @@
 package net.javahub.musc.resources;
 
-import net.javahub.musc.records.Record;
+import net.javahub.musc.records.RecordBuilder;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -14,7 +14,7 @@ class SoundFiles implements Resource {
 
     @Override
     public void getResource() throws IOException {
-        for (Record record : RECORDS) {
+        for (RecordBuilder.Record record : RECORDS) {
             Files.copy(record.getPath(),
                     Path.of(SOUNDS.toString(), record.getSoundFileName()),
                     StandardCopyOption.REPLACE_EXISTING);

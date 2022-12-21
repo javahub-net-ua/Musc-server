@@ -17,7 +17,7 @@ class LangFiles implements Resource {
 
     @Override
     public void getResource() throws IOException {
-        for (Map.Entry<String, String> translation : CONFIG.resources().translations.entrySet()) {
+        for (Map.Entry<String, String> translation : CONFIG.resources.translations.entrySet()) {
             JsonObject json = new JsonObject();
             RECORDS.forEach(record -> {
                 json.addProperty(String.format("item.musc.%s", record.getItemName()), translation.getValue());

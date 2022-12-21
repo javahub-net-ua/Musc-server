@@ -1,7 +1,7 @@
 package net.javahub.musc.resources;
 
 import com.google.gson.JsonObject;
-import net.javahub.musc.records.Record;
+import net.javahub.musc.records.RecordBuilder;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -16,7 +16,7 @@ class Models implements Resource {
 
     @Override
     public void getResource() throws IOException {
-        for (Record record: RECORDS) {
+        for (RecordBuilder.Record record: RECORDS) {
             try (Writer writer = Files.newBufferedWriter(
                     Path.of(MODELS.toString(), record.getModelFileName()))) {
                 JsonObject json = new JsonObject();

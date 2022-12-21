@@ -2,7 +2,7 @@ package net.javahub.musc.resources;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import net.javahub.musc.records.Record;
+import net.javahub.musc.records.RecordBuilder;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -18,7 +18,7 @@ class SoundsFile implements Resource {
     @Override
     public void getResource() throws IOException {
         JsonObject json = new JsonObject();
-        for (Record record : RECORDS) {
+        for (RecordBuilder.Record record : RECORDS) {
             JsonArray sounds = new JsonArray();
             JsonObject sound = new JsonObject();
             sound.addProperty("name", "musc:records/" + record.getSoundName());
