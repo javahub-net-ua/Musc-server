@@ -7,9 +7,7 @@ version = project.mod_version
 group = project.maven_group
 
 repositories {
-    maven {
-        url 'https://maven.wispforest.io'
-    }
+    maven { url "https://jitpack.io" }
 }
 
 dependencies {
@@ -18,16 +16,15 @@ dependencies {
     mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
-    // oωo (owo-lib)
-    modImplementation "io.wispforest:owo-lib:${project.owo_version}"
-    annotationProcessor "io.wispforest:owo-lib:${project.owo_version}"
-    include "io.wispforest:owo-sentinel:${project.owo_version}"
+    // Fabric API. This is technically optional, but you probably want it anyway.
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+
+    // ΩConfig (omega-config)
+    include "com.github.Draylar.omega-config:omega-config-base:${project.omega_config_version}"
+    modImplementation "com.github.Draylar.omega-config:omega-config-base:${project.omega_config_version}"
 
     // GSON
     implementation "com.google.code.gson:gson:${project.gson_version}"
-
-    // Fabric API. This is technically optional, but you probably want it anyway.
-    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 }
 
 processResources {
@@ -39,7 +36,7 @@ processResources {
     }
 }
 
-def targetJavaVersion = 18
+def targetJavaVersion = 17
 tasks.withType(JavaCompile).configureEach {
     // ensure that the encoding is set to UTF-8, no matter what the system default is
     // this fixes some edge cases with special characters not displaying correctly
