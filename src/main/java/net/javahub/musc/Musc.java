@@ -1,33 +1,28 @@
 package net.javahub.musc;
 
-import io.wispforest.owo.Owo;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
+import draylar.omegaconfig.OmegaConfig;
 import net.fabricmc.api.ModInitializer;
 import net.javahub.musc.config.MuscConfig;
 import net.javahub.musc.discs.MuscItems;
-import net.javahub.musc.logging.MuscLogger;
-import net.javahub.musc.records.Record;
+import net.javahub.musc.lootTables.MuscLootTableProvider;
+import net.javahub.musc.records.RecordBuilder;
 import net.javahub.musc.records.RecordUtils;
-import net.javahub.musc.resources.Resources;
-import net.minecraft.item.Item;
+import net.javahub.musc.resources.ResourcesProvider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.nio.file.Path;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.LinkedHashSet;
 
 public class Musc implements ModInitializer {
 
-    public static final String MOD_ID = "musc";
-    public static final MuscConfig CONFIG = MuscConfig.createAndLoad();
-    public static final MuscLogger LOGGER = new MuscLogger();
-    public static final Set<Record> RECORDS = RecordUtils.getRecords();
-    public static final Path RESOURCES = new Resources().of(RECORDS);
-    public static final Map<Record, Item> ITEMS = new LinkedHashMap<>();
-
+    public static final MuscConfig CONFIG = OmegaConfig.register(MuscConfig.class);
+    public static final Logger LOGGER = LoggerFactory.getLogger(CONFIG.getName());
+    public static final LinkedHashSet<RecordBuilder.Record> RECORDS = RecordUtils.getRecords();
+    public static final Path RESOURCES = ResourcesProvider.getResources();
     @Override
     public void onInitialize() {
         RECORDS.forEach(MuscItems::registerRecord);
+        RECORDS.forEach(MuscLootTableProvider::modifyLootTables);
     }
 }
