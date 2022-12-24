@@ -20,6 +20,7 @@ public class Musc implements ModInitializer {
     public static final Logger LOGGER = LoggerFactory.getLogger(CONFIG.getName());
     public static final LinkedHashSet<RecordBuilder.Record> RECORDS = RecordUtils.getRecords();
     public static final Path RESOURCES = ResourcesProvider.getResources();
+
     @Override
     public void onInitialize() {
         RECORDS.forEach(MuscItems::registerRecord);
