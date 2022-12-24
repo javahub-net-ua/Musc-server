@@ -23,7 +23,7 @@ class Models implements Resource {
                 json.addProperty("parent", "item/generated");
 
                 JsonObject texture = new JsonObject();
-                texture.addProperty("layer0", "musc:item/disc");
+                texture.addProperty("layer0", "musc:item/" + record.getItemName());
                 json.add("textures",texture);
                 GSON.toJson(json, writer);
             }

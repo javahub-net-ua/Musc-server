@@ -11,6 +11,7 @@ class Resources {
         add(new PackMCMeta());
         add(new LangFiles());
         add(new Models());
+        add(new Textures());
         add(new SoundsFile());
         add(new SoundFiles());
     }};
