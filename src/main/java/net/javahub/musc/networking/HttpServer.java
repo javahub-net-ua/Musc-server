@@ -21,13 +21,11 @@ class HttpServer extends Thread {
     public void run() {
         try {
             serverSocket = new ServerSocket(CONFIG.distribution.port);
-            ExecutorService executorService = Executors.newCachedThreadPool();
+            ExecutorService executor = Executors.newCachedThreadPool();
             while (!Thread.currentThread().isInterrupted()) {
-                try {
-                    ClientHandler clientHandler = new ClientHandler(serverSocket.accept());
-                    executorService.execute(clientHandler);
-                } catch (IOException ignored) {}
-            } executorService.shutdownNow();
+                ClientHandler clientHandler = new ClientHandler(serverSocket.accept());
+                executor.execute(clientHandler);
+            } executor.shutdownNow();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -37,13 +35,13 @@ class HttpServer extends Thread {
 
         @Override
         public void run() {
-            try (OutputStream os = clientSocket.getOutputStream()) {
+            try {
+                OutputStream os = clientSocket.getOutputStream();
                 String header = getHeader();
                 os.write(header.getBytes());
                 Files.copy(RESOURCES, os);
                 os.flush();
-                Thread.currentThread().join(1000);
-            } catch (IOException | InterruptedException ignored) {}
+            } catch (IOException ignored) {}
         }
 
         private static String getHeader() throws IOException {
