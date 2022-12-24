@@ -20,6 +20,7 @@ public class MuscConfig implements Config {
         public String pathToResources = "musc.zip";
         public Map<String, String> translations = new LinkedHashMap<>(){{
             put("en_us", "Music disc");
+            put("uk_ua", "Платівка");
         }};
     }
 
