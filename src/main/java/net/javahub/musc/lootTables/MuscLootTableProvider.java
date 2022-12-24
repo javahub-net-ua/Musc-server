@@ -23,7 +23,8 @@ public class MuscLootTableProvider {
     private static Identifier getIdentifier(RecordBuilder.Record record) {
         String id = CONFIG.mobBindings.get(record.getTitle());
         Identifier identifier = null;
-        if (Objects.nonNull(id)) identifier = new Identifier(id.split(":")[0], id.split(":")[1]);
+        if (Objects.nonNull(id) && !id.isEmpty() && id.split(":").length == 3)
+            identifier = new Identifier(id.split(":")[0], id.split(":")[1]);
         return Objects.nonNull(identifier) ? identifier: new Identifier("");
     }
 

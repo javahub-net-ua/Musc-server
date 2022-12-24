@@ -20,7 +20,7 @@ public class RecordBuilder {
 
     private String format(String title) {
         String id = overrides.get(title);
-        return Objects.nonNull(id) ? id :
+        return Objects.nonNull(id) && !id.isEmpty() ? id :
                 title.toLowerCase()
                 .replaceAll(" \\(.*?\\)", "")
                 .replaceFirst(" - ", "@")

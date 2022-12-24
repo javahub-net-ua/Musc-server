@@ -30,9 +30,26 @@ public class RecordUtils {
         }
     }
 
+    private static void updateConfig(Set<Path> files) {
+        Set<String> titles = files.stream().map(Path::getFileName).map(Path::toString)
+                .map(f -> f.split(".ogg")[0]).collect(Collectors.toSet());
+        for (String title: titles) {
+            if (!CONFIG.mobBindings.containsKey(title))
+                CONFIG.mobBindings.put(title, "");
+            CONFIG.mobBindings.keySet().stream()
+                    .filter(k -> !titles.contains(k)).forEach(CONFIG.mobBindings::remove);
+            if (!CONFIG.overrides.containsKey(title))
+                CONFIG.overrides.put(title, "");
+            CONFIG.overrides.keySet().stream()
+                    .filter(k -> !titles.contains(k)).forEach(CONFIG.overrides::remove);
+        }
+        CONFIG.save();
+    }
+
     public static LinkedHashSet<Record> getRecords() {
         try {
             TreeSet<Path> files = getRecordFiles();
+            updateConfig(files);
             RecordBuilder builder = new RecordBuilder(CONFIG.overrides);
             LinkedHashSet<Record> records = files.stream().map(builder::of)
             .filter(Objects::nonNull).collect(Collectors.toCollection(LinkedHashSet::new));
