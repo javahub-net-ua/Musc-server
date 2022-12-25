@@ -1,9 +1,6 @@
 package net.javahub.musc.resources;
 
-import net.javahub.musc.Musc;
-
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
@@ -14,8 +11,9 @@ class IconPNG implements Resource {
 
     @Override
     public void getResource() throws IOException {
-        try (InputStream is = Musc.class.getClassLoader().getResourceAsStream(Path.of("assets", "musc", "icon.png").toString())) {
-            if (is != null) Files.copy(is, Path.of(ROOT.toString(), "pack.png"), StandardCopyOption.REPLACE_EXISTING);
+        Path icon = Path.of("server-icon.png");
+        if (Files.exists(icon)) {
+            Files.copy(icon, Path.of(ROOT.toString(), "pack.png"), StandardCopyOption.REPLACE_EXISTING);
         }
     }
 }
