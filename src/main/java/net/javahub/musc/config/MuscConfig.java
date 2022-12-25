@@ -1,24 +1,20 @@
 package net.javahub.musc.config;
 
 import draylar.omegaconfig.api.Config;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class MuscConfig implements Config {
 
-    public Resources resources = new Resources();
-    public Distribution distribution = new Distribution();
-    public Map<String, String> overrides = new HashMap<>();
-    public Map<String, String> mobBindings = new HashMap<>();
+    public final Resources resources = new Resources();
+    public final Distribution distribution = new Distribution();
 
     public static class Resources {
-        public int packFormat = 9;
+        public int packFormat = 10;
         public String description = "Musc resources :)";
         public String pathToResources = "musc.zip";
-        public Map<String, String> translations = new LinkedHashMap<>(){{
+        public Map<String, String> localizations = new LinkedHashMap<>(){{
             put("en_us", "Music disc");
             put("uk_ua", "Платівка");
         }};
@@ -31,12 +27,11 @@ public class MuscConfig implements Config {
 
     @Override
     public String getName() {
-        return "Musc";
+        return "musc";
     }
 
     @Override
-    @Nullable
-    public String getModid() {
+    public String getDirectory() {
         return "musc";
     }
 }
