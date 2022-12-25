@@ -10,7 +10,7 @@ import java.util.TimeZone;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import static net.javahub.musc.Musc.CONFIG;
+import static net.javahub.musc.Musc.Config;
 import static net.javahub.musc.Musc.RESOURCES;
 
 class HttpServer extends Thread {
@@ -20,11 +20,13 @@ class HttpServer extends Thread {
     @Override
     public void run() {
         try {
-            serverSocket = new ServerSocket(CONFIG.distribution.port);
+            serverSocket = new ServerSocket(Config.distribution.port);
             ExecutorService executor = Executors.newCachedThreadPool();
             while (!Thread.currentThread().isInterrupted()) {
-                ClientHandler clientHandler = new ClientHandler(serverSocket.accept());
-                executor.execute(clientHandler);
+                try {
+                    ClientHandler clientHandler = new ClientHandler(serverSocket.accept());
+                    executor.execute(clientHandler);
+                } catch (IOException ignored) {}
             } executor.shutdownNow();
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -36,6 +38,7 @@ class HttpServer extends Thread {
         @Override
         public void run() {
             try {
+                System.out.println(clientSocket.getInetAddress().toString());
                 OutputStream os = clientSocket.getOutputStream();
                 String header = getHeader();
                 os.write(header.getBytes());

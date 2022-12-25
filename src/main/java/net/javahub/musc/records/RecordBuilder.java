@@ -5,28 +5,10 @@ import net.minecraft.item.Item;
 import net.minecraft.util.Identifier;
 
 import java.nio.file.Path;
-import java.util.Map;
-import java.util.Objects;
 
-import static net.javahub.musc.Musc.CONFIG;
+import static net.javahub.musc.Musc.DiscIDs;
 
 public class RecordBuilder {
-
-    private final Map<String, String> overrides;
-
-    public RecordBuilder(Map<String, String> overrides) {
-        this.overrides = overrides;
-    }
-
-    private String format(String title) {
-        String id = overrides.get(title);
-        return Objects.nonNull(id) && !id.isEmpty() ? id :
-                title.toLowerCase()
-                .replaceAll(" \\(.*?\\)", "")
-                .replaceFirst(" - ", "@")
-                .replaceAll("[\\p{Punct}&&[^@-]]", "")
-                .replaceAll("[\\s-]", "_");
-    }
 
     private static boolean verify(String id) {
         return id.matches("(.+?)@(.+?)") && id.matches("[a-z0-9@._-]+$");
@@ -34,7 +16,7 @@ public class RecordBuilder {
 
     public Record of(Path file) {
         String title = file.getFileName().toString().replace(".ogg", "");
-        String id = format(title);
+        String id = DiscIDs.getValue(title);
         return verify(id) ? new Record(file, title, id) : null;
     }
 
@@ -42,6 +24,7 @@ public class RecordBuilder {
 
         private final Path path;
         private Item item;
+
         @Expose private final String title;
         @Expose private final String id;
 
@@ -68,11 +51,11 @@ public class RecordBuilder {
         }
 
         public Identifier getSoundEventID() {
-            return new Identifier(Objects.requireNonNull(CONFIG.getModid()), "music_disc." + getSoundName());
+            return new Identifier("musc", "music_disc." + getSoundName());
         }
 
         public Identifier getItemID() {
-            return new Identifier(Objects.requireNonNull(CONFIG.getModid()), getItemName());
+            return new Identifier("musc", getItemName());
         }
 
         public String getItemName() {

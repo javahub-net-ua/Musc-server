@@ -14,25 +14,18 @@ import net.minecraft.loot.provider.number.UniformLootNumberProvider;
 import net.minecraft.predicate.entity.EntityPredicate;
 import net.minecraft.util.Identifier;
 
-import java.util.Objects;
+import static net.javahub.musc.Musc.MobBindings;
 
-import static net.javahub.musc.Musc.CONFIG;
-
-public class MuscLootTableProvider {
+public class EntityLootTablesProvider {
 
     private static Identifier getIdentifier(RecordBuilder.Record record) {
-        String id = CONFIG.mobBindings.get(record.getTitle());
-        Identifier identifier = null;
-        if (Objects.nonNull(id) && !id.isEmpty() && id.split(":").length == 3)
-            identifier = new Identifier(id.split(":")[0], id.split(":")[1]);
-        return Objects.nonNull(identifier) ? identifier: new Identifier("");
+        String id = MobBindings.getValue(record.getTitle());
+        return new Identifier(id.split(":")[0], "entities/" + id.split(":")[1]);
     }
 
     private static float getChance(RecordBuilder.Record record) {
-        String id = CONFIG.mobBindings.get(record.getTitle());
-        float chance = 0.0f;
-        if (Objects.nonNull(id) && id.split(":").length == 3) chance = Float.parseFloat(id.split(":")[2]);
-        return chance;
+        String id = MobBindings.getValue(record.getTitle());
+        return Float.parseFloat(id.split(":")[2]);
     }
 
     public static void modifyLootTables(RecordBuilder.Record record) {

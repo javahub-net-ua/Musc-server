@@ -8,7 +8,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Map;
 
-import static net.javahub.musc.Musc.CONFIG;
+import static net.javahub.musc.Musc.Config;
 import static net.javahub.musc.Musc.RECORDS;
 import static net.javahub.musc.resources.ResourcesProvider.GSON;
 import static net.javahub.musc.resources.Template.LANG;
@@ -17,7 +17,7 @@ class LangFiles implements Resource {
 
     @Override
     public void getResource() throws IOException {
-        for (Map.Entry<String, String> translation : CONFIG.resources.translations.entrySet()) {
+        for (Map.Entry<String, String> translation : Config.resources.localizations.entrySet()) {
             JsonObject json = new JsonObject();
             RECORDS.forEach(record -> {
                 json.addProperty(String.format("item.musc.%s", record.getItemName()), translation.getValue());
